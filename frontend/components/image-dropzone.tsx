@@ -16,7 +16,11 @@ const ACCEPTED_FILE_TYPES = {
   'image/webp': ['.webp'],
 };
 
-export default function ImageDropzone() {
+type Props = {
+  onImageUpload: (image: File) => void;
+};
+
+export default function ImageDropzone({ onImageUpload }: Props) {
   const [image, setImage] = useState<File | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -67,6 +71,7 @@ export default function ImageDropzone() {
           </div>
         ) : (
           <div className="flex flex-col gap-4 items-center justify-center h-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="object-contain h-1/2"
               src={selectedImageUrl}
@@ -77,7 +82,7 @@ export default function ImageDropzone() {
                 <Trash2 className="size-4 mr-1" />
                 Remove
               </Button>
-              <Button className="mt-2" onClick={() => {}}>
+              <Button className="mt-2" onClick={() => onImageUpload(image!)}>
                 <Brain className="size-4 mr-1" />
                 Find Item
               </Button>
