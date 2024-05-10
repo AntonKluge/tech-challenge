@@ -11,6 +11,9 @@ python = "^3.12"
 flask = "^3.0.3"
 selenium = "^4.20.0"
 openai = "^1.28.0"
+python-dotenv = "^1.0.1"
+diskcache = "^5.6.3"
+webdriver-manager = "^4.0.1"
 
 
 [build-system]

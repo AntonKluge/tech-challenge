@@ -16,6 +16,7 @@ def get_producer_model(items: list[dict[str, str]]) -> dict[str, str]:
                 "content": "You are an helpful assistant which helps me to identify clothing. I have the title of "
                            "multiple websites which sell that specific piece of clothing I am looking for. Please "
                            "extract the producer and model of the item based of the title of the websites I found. "
+                           "Do not extract size information or other irrelevant details, just the model name!"
                            "If multiple producers or models were mentioned, return the one that is most mentioned "
                            "and makes the most sense. Answer in the pattern:"
                            "\n\nproducer: \"Producer\"\nmodel: \"Model\""
