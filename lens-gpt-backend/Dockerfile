@@ -11,9 +11,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     xvfb \
+    libxi6 \
     chromium \
     chromium-driver \
-    libxi6 \
     libgconf-2-4 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -40,5 +40,6 @@ EXPOSE 5000
 
 # Set the default command to execute the Flask app using Poetry
 CMD ["poetry", "run", "python", "-m", "lens_gpt_backend.main"]
+
 
 

@@ -1,4 +1,3 @@
-
 import os
 from time import sleep
 
@@ -14,10 +13,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--window-size=1920,1080')
+options.add_argument('--no-sandbox')  # Bypass OS security model
+options.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
+options.add_argument('--disable-gpu')  # Disable GPU hardware acceleration
 
+service = Service(executable_path="/usr/bin/chromedriver")
 
 # Use the specific version of ChromeDriver that matches your ChromeDriver version
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(options=options, service=service)
 
 wait = WebDriverWait(driver, 10)  # Timeout after 10 seconds
 COOKIES_ACCEPTED = False
