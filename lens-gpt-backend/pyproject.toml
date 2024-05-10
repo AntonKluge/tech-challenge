@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "lens-gpt-backend"
+version = "0.1.0"
+description = ""
+authors = ["Anton Kluge <anton.kluge@tum.de>", "Leon Staufer <leon.staufer@tum.de>",
+    "Anton Wyrowski <anton.wyrowski@tum.de", "Ashima Grewal <ashima.grewal@tum.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0.3"
+selenium = "^4.20.0"
+openai = "^1.28.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
