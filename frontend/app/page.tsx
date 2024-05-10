@@ -1,6 +1,6 @@
+import ImageDropzone from '@/components/image-dropzone';
 import Typography from '@/components/typography';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { UploadCloudIcon } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -25,6 +25,8 @@ export default function Home() {
           Happy shopping and happy planet-saving! 🌍 📸🛍️👗👕
         </AlertDescription>
       </Alert>
+
+      <ImageDropzone />
     </main>
   );
 }
