@@ -10,10 +10,15 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.0.3"
 selenium = "^4.20.0"
-openai = "^1.28.0"
+openai = "^1.28.1"
 python-dotenv = "^1.0.1"
 diskcache = "^5.6.3"
 webdriver-manager = "^4.0.1"
+numpy = "^1.26.4"
+opencv-python = "^4.9.0.80"
+httpx = "^0.27.0"
+parsel = "^1.9.1"
+nested-lookup = "^0.2.25"
 
 
 [build-system]
