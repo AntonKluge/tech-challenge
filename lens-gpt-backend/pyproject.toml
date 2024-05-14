@@ -19,6 +19,9 @@ opencv-python = "^4.9.0.80"
 httpx = "^0.27.0"
 parsel = "^1.9.1"
 nested-lookup = "^0.2.25"
+flask-sse = "^1.0.0"
+gunicorn = "^22.0.0"
+gevent = "^24.2.1"
 
 
 [build-system]
