@@ -6,8 +6,8 @@ from flask import Flask, request, jsonify
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from lens_gpt_backend.generators.gpt_call import get_producer_model
-from lens_gpt_backend.generators.lens_scape import get_urls_for_image
+from lens_gpt_backend.producer.gpt_call import get_producer_model
+from lens_gpt_backend.producer.lens_scape import get_urls_for_image
 
 app = Flask(__name__)
 cache = Cache(".cache")

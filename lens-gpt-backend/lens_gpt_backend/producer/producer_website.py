@@ -1,4 +1,4 @@
-from lens_gpt_backend.generators.generators import Generators
+from lens_gpt_backend.producer.producer import Generators
 
 
 class ProducerWebsite(Generators):
