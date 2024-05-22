@@ -31,7 +31,7 @@ class Producer(ABC, Generic[I, O]):
     def produce(self, input_value: I) -> tuple[list[O], bool]:
         pass
 
-    def register_consumer(self, consumer: Consumer[list[O]]) -> None:
+    def register_consumer(self, consumer: Consumer[O]) -> None:
         self._downstream.append(consumer)
 
     def register_producer(self, producer: 'Producer[O, N]') -> None:

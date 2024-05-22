@@ -9,7 +9,7 @@ O = TypeVar('O')
 
 class ProducerConsumer(Consumer[I], Generic[I, O]):
 
-    def __init__(self, producer: Producer[list[I], O], upload_hash: str):
+    def __init__(self, producer: Producer[I, O], upload_hash: str):
         super().__init__(upload_hash)
         self._producer = producer
 

@@ -41,10 +41,10 @@ def _get_urls_for_image(image_path: str, driver: WebDriver, wait: WebDriverWait[
         return []
 
 
-class LensLinksProducer(Producer[str, dict[str, str | None]]):
+class LensLinksProducer(Producer[str, list[dict[str, str | None]]]):
 
-    def produce(self, input_value: str) -> tuple[list[dict[str, str | None]], bool]:
+    def produce(self, input_value: str) -> tuple[list[list[dict[str, str | None]]], bool]:
         base_url = "https://google.com/"
         scape_function = partial(_get_urls_for_image, input_value)
         result = driver_pool.execute(scape_function, base_url)
-        return result, True
+        return [result], True
