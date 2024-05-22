@@ -3,17 +3,15 @@ import os
 
 from diskcache import Cache
 from flask import Flask, request, jsonify
-from werkzeug.datastructures import FileStorage
-from werkzeug.utils import secure_filename
-
 from lens_gpt_backend.producer.gpt_call import get_producer_model
 from lens_gpt_backend.producer.lens_scape import get_urls_for_image
+from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 cache = Cache(".cache")
 if not os.path.exists("tmp"):
     os.makedirs("tmp")
-
 
 generators = [
     ("producer_model", get_producer_model),

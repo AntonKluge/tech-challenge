@@ -8,4 +8,3 @@ class ProducerWebsite(Generators):
 
     def generate(self) -> tuple[dict[str, str], bool]:
         pass
-
