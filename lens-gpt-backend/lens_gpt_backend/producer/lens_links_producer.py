@@ -9,6 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from lens_gpt_backend.producer.producer import Producer
 from lens_gpt_backend.utils.driver_pool import driver_pool
+from lens_gpt_backend.utils.product import Product
 
 LENS_ICON_CSS = ("body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form >"
                  " div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.dRYYxd > div.nDcEnd")
@@ -22,8 +23,7 @@ def _get_item_urls(element: WebElement) -> dict[str, str | None]:
     return {"url": url, "title": title, "img": img}
 
 
-def _get_urls_for_image(image_path: str, driver: WebDriver, wait: WebDriverWait[WebDriver]) \
-        -> list[dict[str, str | None]]:
+def _get_urls_for_image(image_path: str, driver: WebDriver, wait: WebDriverWait[WebDriver]) -> Product:
     driver.get("https://www.google.com/")
 
     # Click on lens icon
@@ -35,16 +35,16 @@ def _get_urls_for_image(image_path: str, driver: WebDriver, wait: WebDriverWait[
 
     try:
         urls_elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, ITEM_CSS)))
-        return [_get_item_urls(element) for element in urls_elements]
+        return Product([_get_item_urls(element) for element in urls_elements])
     except NoSuchElementException as e:
         print(e)
-        return []
+        return Product([])
 
 
-class LensLinksProducer(Producer[str, list[dict[str, str | None]]]):
+class LensLinksProducer(Producer):
 
-    def produce(self, input_value: str) -> tuple[list[list[dict[str, str | None]]], bool]:
+    def _produce(self, input_value: Product) -> tuple[Product, bool]:
         base_url = "https://google.com/"
-        scape_function = partial(_get_urls_for_image, input_value)
+        scape_function = partial(_get_urls_for_image, input_value.get_str())
         result = driver_pool.execute(scape_function, base_url)
-        return [result], True
+        return result, True

@@ -1,6 +1,7 @@
 from openai import OpenAI
 
 from lens_gpt_backend.producer.producer import Producer
+from lens_gpt_backend.utils.product import Product
 
 client = OpenAI(api_key="sk-proj-s7WyfYnogKGcT6Ty30DDT3BlbkFJmn11EtBLGWsK5jAgWjEW")
 
@@ -23,11 +24,12 @@ EXAMPLE_TITLES = ("Patagonia P-6 Logo Responsibili Long sleeve (black 2)\nPatago
                   "Patagonia long sleeve, Tees, Patagonia")
 
 
-class ModelProducerProducer(Producer[list[dict[str, str | None]], dict[str, str]]):
+class ModelProducerProducer(Producer):
 
-    def produce(self, input_value: list[dict[str, str | None]]) -> tuple[list[dict[str, str]], bool]:
-        model_producer = _get_producer_model(input_value)
-        return [model_producer], True
+    def _produce(self, input_value: Product) -> tuple[Product, bool]:
+        inputs = [li.get_dict_str_str() for li in input_value.get_list()]
+        model_producer = _get_producer_model(inputs)
+        return Product(model_producer), True  # type: ignore
 
 
 def _get_producer_model(items: list[dict[str, str | None]]) -> dict[str, str]:

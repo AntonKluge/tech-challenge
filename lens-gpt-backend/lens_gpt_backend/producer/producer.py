@@ -1,42 +1,31 @@
 from abc import abstractmethod, ABC
-from typing import TypeVar, Generic
 
-from lens_gpt_backend.consumer.cache_consumer import CacheConsumer
-from lens_gpt_backend.consumer.consumer import Consumer
-from lens_gpt_backend.consumer.producer_consumer import ProducerConsumer
-from lens_gpt_backend.consumer.puhs_client_consumer import PushClientConsumer
-
-# The type of the input that is given to work on.
-I = TypeVar('I')
-
-# The type of the output of which should be returned a list, i.e. list[O]
-O = TypeVar('O')
-
-N = TypeVar('N')
+from lens_gpt_backend.utils.product import Product
+from lens_gpt_backend.utils.result_queue import ResultQueue
 
 
-class Producer(ABC, Generic[I, O]):
+class Producer(ABC):
 
-    def __init__(self, upload_hash: str, pushes_client: bool = True, caches: bool = True):
+    def __init__(self, upload_hash: str, add_queue: bool = True) -> None:
         self._upload_hash = upload_hash
-        self._downstream: list[Consumer[O]] = []
+        self._downstream: list[Producer] = []
 
-        if pushes_client:
-            self.register_consumer(PushClientConsumer(upload_hash))
-
-        if caches:
-            self.register_consumer(CacheConsumer(upload_hash))
+        if add_queue:
+            self._result_queue = ResultQueue.factory(upload_hash)
 
     @abstractmethod
-    def produce(self, input_value: I) -> tuple[list[O], bool]:
+    def _produce(self, input_value: Product) -> tuple[Product, bool]:
         pass
 
-    def register_consumer(self, consumer: Consumer[O]) -> None:
-        self._downstream.append(consumer)
+    def produce(self, input_value: Product) -> None:
+        output_value, more = self._produce(input_value)
+        self._push_consumers(output_value)
+        if self._result_queue:
+            self._result_queue.put(output_value)
 
-    def register_producer(self, producer: 'Producer[O, N]') -> None:
-        self.register_consumer(ProducerConsumer(producer, self._upload_hash))
+    def register_producer(self, producer: 'Producer') -> None:
+        self._downstream.append(producer)
 
-    def _push_consumers(self, output_value: O) -> None:
-        for consumer in self._downstream:
-            consumer.consume(output_value)
+    def _push_consumers(self, output_value: Product) -> None:
+        for producer in self._downstream:
+            producer.produce(output_value)
