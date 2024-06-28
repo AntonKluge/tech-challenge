@@ -6,15 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies for general environment and Selenium
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    unzip \
-    xvfb \
-    libxi6 \
+RUN echo "Acquire::http::Pipeline-Depth 0;" > /etc/apt/apt.conf.d/99custom && \
+    echo "Acquire::http::No-Cache true;" >> /etc/apt/apt.conf.d/99custom && \
+    echo "Acquire::BrokenProxy    true;" >> /etc/apt/apt.conf.d/99custom
+
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y \
     chromium \
     chromium-driver \
-    libgconf-2-4 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

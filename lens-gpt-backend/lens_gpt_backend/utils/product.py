@@ -1,3 +1,4 @@
+import json
 from typing import Union
 
 T = Union[None, str, list['T'], dict[str, 'T']]
@@ -36,3 +37,10 @@ class Product:
                     raise ValueError(f"Expected str, got {type(k)}")
             return return_data
         raise ValueError(f"Expected dict, got {type(data)}")
+
+    def __str__(self) -> str:
+        return f"Product({self._data}, {self._data_type}, {self._data_description})"
+
+    def json(self) -> str:
+        this_dict = {'data': self._data, 'data_type': self._data_type, 'data_description': self._data_description}
+        return json.dumps(this_dict) + '\n'

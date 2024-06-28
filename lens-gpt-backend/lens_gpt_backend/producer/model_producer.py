@@ -29,7 +29,7 @@ class ModelProducerProducer(Producer):
     def _produce(self, input_value: Product) -> tuple[Product, bool]:
         inputs = [li.get_dict_str_str() for li in input_value.get_list()]
         model_producer = _get_producer_model(inputs)
-        return Product(model_producer), True  # type: ignore
+        return Product(model_producer, data_description="model-producer"), True  # type: ignore
 
 
 def _get_producer_model(items: list[dict[str, str | None]]) -> dict[str, str]:

@@ -7,7 +7,7 @@ from diskcache import Cache
 from flask import Flask, request, jsonify, Response, g
 from werkzeug.datastructures import FileStorage
 
-from lens_gpt_backend.processing import _processing_hierarchy
+from lens_gpt_backend.processing import _processing_hierarchy, process_async
 from lens_gpt_backend.utils.product import Product
 from lens_gpt_backend.utils.result_queue import ResultQueue
 
@@ -52,14 +52,11 @@ def _process_image(file: FileStorage, request_id: str) -> Generator[str, None, N
     try:
         file.save(absolute_path)
         result_queue = ResultQueue.factory(file_hash)
-        _processing_hierarchy(file_path).produce(Product(absolute_path))
+        process_async(file_hash, lambda x: x.produce(Product(absolute_path)))
         return result_queue.str_generator(request_id)
     except Exception as e:
         print(e)
         raise e
-    finally:
-        if os.path.exists(file_path):
-            os.remove(file_path)
 
 
 def _hash_file(filepath: str) -> str:
@@ -74,6 +71,8 @@ def _hash_file(filepath: str) -> str:
 def _hash_file_storage(file_storage: FileStorage, hash_algorithm: str = 'sha256') -> str:
     hash_obj = hashlib.new(hash_algorithm)
     chunk_size = 4096
+    file_storage.stream.seek(0)  # Ensure stream is at the beginning
     while chunk := file_storage.stream.read(chunk_size):
         hash_obj.update(chunk)
+    file_storage.stream.seek(0)  # Reset stream to the beginning after reading
     return hash_obj.hexdigest()

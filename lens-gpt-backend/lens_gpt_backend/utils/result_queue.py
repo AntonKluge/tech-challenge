@@ -60,12 +60,15 @@ class ResultQueue:
         @param result: The result to add to the queue.
         @raises ValueError: If the queue is closed.
         """
+        print(f"ResultQueue[{self._file_hash}]: trying to put {result} by {threading.current_thread().name} into {hex(id(self))}")
         with self._condition:
             if self._closed:
                 raise ValueError("Writing to a closed queue is not allowed.")
             self._queue.append(result)
             self._queue_size += 1
             self._condition.notify_all()  # Notify all waiting threads that new data is available
+
+        print(f"ResultQueue[{self._file_hash}]: put {result} by {threading.current_thread().name} into {hex(id(self))}")
 
     def close(self) -> None:
         """
@@ -83,10 +86,12 @@ class ResultQueue:
         @param request_id: The identifier of the request for which to retrieve the next result.
         @return dict[str, str] | None: The next result or None if the queue is closed and empty.
         """
+        print(f"ResultQueue[{self._file_hash}]: trying to get {request_id} by {threading.current_thread().name} from {hex(id(self))}")
         with self._condition:
             while self._request_progress.get(request_id, 0) >= self._queue_size:
                 if self._closed:
                     return None  # No more items will be added, return None to indicate completion
+                print(f"ResultQueue[{self._file_hash}]: wait {request_id} by {threading.current_thread().name}")
                 self._condition.wait()  # Wait for new items or closure notification
 
             request_progress = self._request_progress.get(request_id, 0)
@@ -111,4 +116,5 @@ class ResultQueue:
             result = self.get_next(request_id)
             if result is None:
                 break
-            yield json.dumps(result)
+            print(f"ResultQueue[{self._file_hash}]: yield {result}")
+            yield result.json()
