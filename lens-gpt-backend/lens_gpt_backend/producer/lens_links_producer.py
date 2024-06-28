@@ -35,7 +35,7 @@ def _get_urls_for_image(image_path: str, driver: WebDriver, wait: WebDriverWait[
 
     try:
         urls_elements = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, ITEM_CSS)))
-        return Product([_get_item_urls(element) for element in urls_elements])
+        return Product([_get_item_urls(element) for element in urls_elements])  # type: ignore
     except NoSuchElementException as e:
         print(e)
         return Product([])

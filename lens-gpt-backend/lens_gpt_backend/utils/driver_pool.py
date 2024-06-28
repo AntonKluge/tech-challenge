@@ -1,3 +1,4 @@
+import os
 import threading
 from dataclasses import dataclass
 from queue import Queue
@@ -13,7 +14,7 @@ from lens_gpt_backend.utils.accept_cookies import _google_accept_cookies
 R = TypeVar('R')
 
 ACCEPT_COOKIE_FUNCTIONS = {
-    "https://www.google.com/": _google_accept_cookies
+    "https://google.com/": _google_accept_cookies
 }
 
 
@@ -27,15 +28,19 @@ class DriverWrapper:
 
 def _init_new_driver() -> DriverWrapper:
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
     options.add_argument('--window-size=1920,1080')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
 
-    service = Service(executable_path="/usr/bin/chromedriver")
+    # Check if running in Docker by looking for the .dockerenv file
+    if os.path.exists('/.dockerenv'):
+        options.add_argument('--headless')
+        service = Service(executable_path="/usr/bin/chromedriver")
+        driver = webdriver.Chrome(options=options, service=service)
+    else:
+        driver = webdriver.Chrome(options=options)
 
-    driver = webdriver.Chrome(options=options, service=service)
     wait = WebDriverWait(driver, 10)  # Timeout after 10 seconds
     return DriverWrapper(driver, wait, {})
 
