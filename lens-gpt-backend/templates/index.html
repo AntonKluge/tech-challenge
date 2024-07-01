@@ -45,9 +45,17 @@
                 const parts = text.split('\n\n');
                 parts.forEach(part => {
                     if (part.trim()) {
+                        // append timestamp with milliseconds
+                        const timestamp = document.createElement('div');
+                        timestamp.textContent = new Date().toISOString();
+                        document.getElementById('results').appendChild(timestamp);
+                        // append data
                         const newElement = document.createElement('div');
                         newElement.textContent = part.replace(/^data: /, '');
                         document.getElementById('results').appendChild(newElement);
+                        // append divider
+                        const divider = document.createElement('hr');
+                        document.getElementById('results').appendChild(divider);
                     }
                 });
                 return reader.read().then(processStream);
