@@ -1,7 +1,7 @@
 import json
 from typing import Union
 
-T = Union[None, str, list['T'], dict[str, 'T']]
+T = Union[None, str, list['T'], dict[str, 'T'] | int | float | bool]
 
 
 class Product:
