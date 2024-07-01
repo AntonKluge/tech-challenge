@@ -2,8 +2,12 @@
 name = "lens-gpt-backend"
 version = "0.1.0"
 description = ""
-authors = ["Anton Kluge <anton.kluge@tum.de>", "Leon Staufer <leon.staufer@tum.de>",
-    "Anton Wyrowski <anton.wyrowski@tum.de", "Ashima Grewal <ashima.grewal@tum.de>"]
+authors = [
+    "Anton Kluge <anton.kluge@tum.de>",
+    "Leon Staufer <leon.staufer@tum.de>",
+    "Anton Wyrowski <anton.wyrowski@tum.de",
+    "Ashima Grewal <ashima.grewal@tum.de>",
+]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -27,6 +31,7 @@ pylint = "^3.2.2"
 flake8 = "^7.0.0"
 types-requests = "^2.32.0.20240523"
 appium-python-client = "^4.0.0"
+flask-cors = "^4.0.1"
 
 
 [build-system]
@@ -39,17 +44,8 @@ strict = true
 
 [tool.pylint.'MESSAGES CONTROL']
 # Disable the message, report, category or checker with the given id(s).
-disable = [
-    "C0114",
-    "C0115",
-    "C0116",
-]
+disable = ["C0114", "C0115", "C0116"]
 
 [tool.flake8]
 max-line-length = 110
-ignore = [
-    "E203",
-    "E266",
-    "E501",
-    "W503"
-]
+ignore = ["E203", "E266", "E501", "W503"]
