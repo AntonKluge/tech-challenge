@@ -15,7 +15,7 @@
 <div id="results"></div>
 
 <script>
-    document.getElementById('upload-form').addEventListener('submit', function(event) {
+    document.getElementById('upload-form').addEventListener('submit', function (event) {
         event.preventDefault();
         const fileInput = document.getElementById('file-input');
         if (fileInput.files.length === 0) {
@@ -36,30 +36,39 @@
         }).then(response => {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
-            const processStream = ({ done, value }) => {
+            let buffer = '';
+
+            const processStream = ({done, value}) => {
                 if (done) {
                     console.log('Stream complete');
                     return;
                 }
-                const text = decoder.decode(value, { stream: true });
-                const parts = text.split('\n\n');
+                buffer += decoder.decode(value, {stream: true});
+
+                let parts = buffer.split('\n\n');
+                buffer = parts.pop(); // Save the last part in the buffer in case it's incomplete
+
                 parts.forEach(part => {
                     if (part.trim()) {
-                        // append timestamp with milliseconds
+                        // Append timestamp with milliseconds
                         const timestamp = document.createElement('div');
                         timestamp.textContent = new Date().toISOString();
                         document.getElementById('results').appendChild(timestamp);
-                        // append data
+
+                        // Append data
                         const newElement = document.createElement('div');
                         newElement.textContent = part.replace(/^data: /, '');
                         document.getElementById('results').appendChild(newElement);
-                        // append divider
+
+                        // Append divider
                         const divider = document.createElement('hr');
                         document.getElementById('results').appendChild(divider);
                     }
                 });
+
                 return reader.read().then(processStream);
             };
+
             return reader.read().then(processStream);
         }).catch(error => {
             console.error('Fetch failed:', error);

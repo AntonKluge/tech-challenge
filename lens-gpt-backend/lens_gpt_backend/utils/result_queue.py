@@ -124,4 +124,4 @@ class ResultQueue:
             if result is None:
                 break
             print(f"ResultQueue[{self._file_hash}]: yield {result}")
-            yield result.json()
+            yield result.json() + "\n"
