@@ -1,4 +1,3 @@
-import json
 import threading
 from typing import Generator, Optional
 
@@ -42,6 +41,8 @@ class ResultQueue:
         if result_queue is None:
             result_queue = ResultQueue(file_hash)
             ResultQueue._result_queues[file_hash] = result_queue
+        else:
+            result_queue._fresh = False
         return result_queue
 
     def __init__(self, file_hash: str) -> None:
@@ -49,6 +50,7 @@ class ResultQueue:
         self._queue: list[Product] = []
         self._queue_size = 0
         self._closed = False
+        self._fresh = True
         self._lock = threading.Lock()
         self._condition = threading.Condition(self._lock)
         self._request_progress: dict[str, int] = {}
@@ -60,7 +62,8 @@ class ResultQueue:
         @param result: The result to add to the queue.
         @raises ValueError: If the queue is closed.
         """
-        print(f"ResultQueue[{self._file_hash}]: trying to put {result} by {threading.current_thread().name} into {hex(id(self))}")
+        print(
+            f"ResultQueue[{self._file_hash}]: trying to put {result} by {threading.current_thread().name} into {hex(id(self))}")
         with self._condition:
             if self._closed:
                 raise ValueError("Writing to a closed queue is not allowed.")
@@ -86,7 +89,8 @@ class ResultQueue:
         @param request_id: The identifier of the request for which to retrieve the next result.
         @return dict[str, str] | None: The next result or None if the queue is closed and empty.
         """
-        print(f"ResultQueue[{self._file_hash}]: trying to get {request_id} by {threading.current_thread().name} from {hex(id(self))}")
+        print(
+            f"ResultQueue[{self._file_hash}]: trying to get {request_id} by {threading.current_thread().name} from {hex(id(self))}")
         with self._condition:
             while self._request_progress.get(request_id, 0) >= self._queue_size:
                 if self._closed:
@@ -104,7 +108,10 @@ class ResultQueue:
         Returns whether the queue is fresh, i.e., it has not been closed and has no results.
         @return bool: True if the queue is fresh, False otherwise.
         """
-        return not self._closed and self._queue_size == 0
+        return self._fresh
+
+    def set_fresh(self, fresh: bool) -> None:
+        self._fresh = fresh
 
     def str_generator(self, request_id: str) -> Generator[str, None, None]:
         """

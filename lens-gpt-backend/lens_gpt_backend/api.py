@@ -11,7 +11,7 @@ from lens_gpt_backend.processing import _processing_hierarchy, process_async
 from lens_gpt_backend.utils.product import Product
 from lens_gpt_backend.utils.result_queue import ResultQueue
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.abspath('../templates'))
 cache = Cache(".cache")
 if not os.path.exists("tmp"):
     os.makedirs("tmp")
@@ -22,6 +22,10 @@ def before_request() -> None:
     request_id = str(uuid.uuid4())
     g.request_id = request_id
 
+
+@app.route('/')
+def index() -> Response:
+    return app.send_static_file('index.html')
 
 @app.route('/classify', methods=['POST'])
 def upload_file() -> tuple[Response, int] | Response:
@@ -52,7 +56,8 @@ def _process_image(file: FileStorage, request_id: str) -> Generator[str, None, N
     try:
         file.save(absolute_path)
         result_queue = ResultQueue.factory(file_hash)
-        process_async(file_hash, lambda x: x.produce(Product(absolute_path)))
+        if result_queue.is_fresh():
+            process_async(file_hash, lambda x: x.produce(Product(absolute_path)))
         return result_queue.str_generator(request_id)
     except Exception as e:
         print(e)

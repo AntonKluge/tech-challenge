@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+</head>
+<body>
+<h1>Upload a PNG File</h1>
+<form id="upload-form">
+    <input type="file" id="file-input" accept=".png" required>
+    <button type="submit">Upload</button>
+</form>
+<h2>Results:</h2>
+<div id="results"></div>
+
+<script>
+    document.getElementById('upload-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('file-input');
+        if (fileInput.files.length === 0) {
+            alert('Please select a file.');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/classify', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'text/event-stream'
+            }
+        }).then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            const processStream = ({ done, value }) => {
+                if (done) {
+                    console.log('Stream complete');
+                    return;
+                }
+                const text = decoder.decode(value, { stream: true });
+                const parts = text.split('\n\n');
+                parts.forEach(part => {
+                    if (part.trim()) {
+                        const newElement = document.createElement('div');
+                        newElement.textContent = part.replace(/^data: /, '');
+                        document.getElementById('results').appendChild(newElement);
+                    }
+                });
+                return reader.read().then(processStream);
+            };
+            return reader.read().then(processStream);
+        }).catch(error => {
+            console.error('Fetch failed:', error);
+        });
+    });
+</script>
+</body>
+</html>
