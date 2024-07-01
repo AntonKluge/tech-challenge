@@ -39,6 +39,7 @@ def _init_new_driver() -> DriverWrapper:
         service = Service(executable_path="/usr/bin/chromedriver")
         driver = webdriver.Chrome(options=options, service=service)
     else:
+        options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
 
     wait = WebDriverWait(driver, 10)  # Timeout after 10 seconds
