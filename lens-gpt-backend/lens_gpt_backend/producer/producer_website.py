@@ -14,7 +14,8 @@ from lens_gpt_backend.utils.utils import distinct
 ASSISTANT_INSTR = ("You are an helpful assistant which helps me to find the website of the original producer "
                    "of a specific product. I have the urls of multiple websites which showed up when I searched "
                    "for that product. They are enumerated. Please give me the number of the website which "
-                   "is most likely the original producer of the product. It is very important that you only return "
+                   "is most likely the original producer of the product, not a reseller. I explicitly want to website"
+                   "of the Producer of that specific product, none other! It is very important that you only return "
                    "the number of the website and not any other information.")
 
 EXAMPLE_TITLES = ("Product: Patagonia Fitz Roy Trout Trucker Hat\n"
@@ -49,6 +50,8 @@ def _get_urls_for_image(search: str, driver: WebDriver, wait: WebDriverWait[WebD
 
     # Get all links from the search by getting all a tags from the center column with id center_col
     links = driver.find_elements(By.CSS_SELECTOR, "#res a")
+    # Quick and dirty, filter all out which are not very wide, as they are probably ads
+    links = [link for link in links if link.size["width"] > 250]
     urls = [link.get_attribute("href") for link in links]
     non_google_urls = distinct([url for url in urls if url and "google.com" not in url])
     enumerate_urls = [f"{i + 1}. {url}" for i, url in enumerate(non_google_urls)]

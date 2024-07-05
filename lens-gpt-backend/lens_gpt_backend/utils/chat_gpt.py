@@ -8,7 +8,7 @@ def ask_chat_gpt(instruction: str, input_text: list[str]) -> str:
         {"role": "user" if i % 2 == 0 else "assistant", "content": text} for i, text in enumerate(input_text)]
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         messages=messages,  # type: ignore
         temperature=1,
         max_tokens=256,

@@ -39,7 +39,7 @@ def _init_new_driver() -> DriverWrapper:
         service = Service(executable_path="/usr/bin/chromedriver")
         driver = webdriver.Chrome(options=options, service=service)
     else:
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
 
     wait = WebDriverWait(driver, 10)  # Timeout after 10 seconds
@@ -53,10 +53,10 @@ class DriverPool:
         self.lock = threading.Lock()
         self.active_drivers = 0
 
-    def execute(self, function: Callable[[WebDriver, WebDriverWait[WebDriver]], R], base_url: str) -> R:
+    def execute(self, function: Callable[[WebDriver, WebDriverWait[WebDriver]], R], base_url: str | None = None) -> R:
         driver_wrapper = self._get_driver()
 
-        if base_url not in driver_wrapper.cookies:
+        if base_url and base_url not in driver_wrapper.cookies:
             ACCEPT_COOKIE_FUNCTIONS[base_url](driver_wrapper.driver)
             driver_wrapper.cookies[base_url] = True
 
