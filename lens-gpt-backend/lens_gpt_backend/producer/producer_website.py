@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from lens_gpt_backend.producer.producer import Producer
 from lens_gpt_backend.utils.chat_gpt import ask_chat_gpt
 from lens_gpt_backend.utils.driver_pool import driver_pool
+from lens_gpt_backend.utils.google_search import google_search
 from lens_gpt_backend.utils.product import Product
 from lens_gpt_backend.utils.utils import distinct
 
@@ -30,36 +31,18 @@ EXAMPLE_ANSWERS = "1"
 class ProducerWebsite(Producer):
 
     def _produce(self, input_value: Product) -> tuple[Product, bool]:
-        base_url = "https://google.com/"
+
         search_dict = input_value.get_dict_str_str()
-        search_term = f"{search_dict['producer']} {search_dict['model']}"
-        scape_function = partial(_get_urls_for_image, search_term)
-        result = driver_pool.execute(scape_function, base_url)
-        return result, True
+        search = search_dict["producer"] + " " + search_dict["model"]
+        search_results = google_search(search)
 
+        input_urls = [f"{i + 1}. {result['link']}" for i, result in enumerate(search_results)]
+        prompt = f"Product: {search}\n{input_urls}"
 
-def build_google_search_url(query: str) -> str:
-    base_url = "https://www.google.com/search?q="
-    encoded_query = quote_plus(query)
-    return base_url + encoded_query
+        for i in range(3):
+            response = ask_chat_gpt(ASSISTANT_INSTR, [EXAMPLE_TITLES, EXAMPLE_ANSWERS, prompt])
+            if response.isnumeric() and 1 <= int(response) <= 7:
+                return Product(search_results[int(response) - 1], data_description="url"), True  # type: ignore
+            print("Invalid response, please try again: " + response + "\n" + prompt)
 
-
-def _get_urls_for_image(search: str, driver: WebDriver, wait: WebDriverWait[WebDriver]) -> Product:
-    search_format = build_google_search_url(search)
-    driver.get(search_format)
-
-    # Get all links from the search by getting all a tags from the center column with id center_col
-    links = driver.find_elements(By.CSS_SELECTOR, "#res a")
-    # Quick and dirty, filter all out which are not very wide, as they are probably ads
-    links = [link for link in links if link.size["width"] > 250]
-    urls = [link.get_attribute("href") for link in links]
-    non_google_urls = distinct([url for url in urls if url and "google.com" not in url])
-    enumerate_urls = [f"{i + 1}. {url}" for i, url in enumerate(non_google_urls)]
-    input_urls = "\n".join(enumerate_urls[:7])
-    prompt = f"Product: {search}\n{input_urls}"
-    response = ask_chat_gpt(ASSISTANT_INSTR, [EXAMPLE_TITLES, EXAMPLE_ANSWERS, prompt])
-
-    if response:
-        return Product(non_google_urls[int(response) - 1], data_description="url")
-
-    raise ValueError("No response from AI model!")
+        raise ValueError("No response from AI model!")

@@ -24,7 +24,7 @@ def process_async(file_hash: str, init: Callable[[Producer], None]) -> None:
 
 def _processing_hierarchy(file_hash: str) -> Producer:
 
-    lens_links = LensLinksProducer(file_hash)
+    lens_links = LensLinksProducer(file_hash, add_queue=False)
     model_producer = ModelProducerProducer(file_hash)
     model_information_producer = ModelInformationProducer(file_hash)
     price_producer = PriceProducer(file_hash)

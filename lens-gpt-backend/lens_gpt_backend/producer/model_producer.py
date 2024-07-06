@@ -20,7 +20,7 @@ EXAMPLE_TITLES = ("Patagonia P-6 Logo Responsibili Long sleeve (black 2)\nPatago
                   "メルカリ\nPatagonia Men's P-6 Logo Long-Sleeve Responsibili-Tee | "
                   "Patagonia long sleeve, Tees, Patagonia")
 
-EXAMPLE_ANSWERS = "producer: Patagonia\nmodel: Patagonia Men's Long-Sleeved P-6 Logo Responsibili-Tee"
+EXAMPLE_ANSWERS = "producer: Patagonia\nmodel: Men's Long-Sleeved P-6 Logo Responsibili-Tee"
 
 
 class ModelProducerProducer(Producer):

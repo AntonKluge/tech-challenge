@@ -12,6 +12,8 @@ class Producer(ABC):
 
         if add_queue:
             self._result_queue = ResultQueue.factory(file_hash)
+        else:
+            self._result_queue = None
 
         print(f"Producer[{file_hash}]: created")
 

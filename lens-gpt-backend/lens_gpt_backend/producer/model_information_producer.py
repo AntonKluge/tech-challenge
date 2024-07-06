@@ -70,7 +70,7 @@ SYSTEM_ANSWER = ("Price: 130.00\nOriginal Name: Men's Better Sweater™ 1/4-Zip 
 class ModelInformationProducer(Producer):
 
     def _produce(self, input_value: Product) -> tuple[Product, bool]:
-        producer_url = input_value.get_str()
+        producer_url = input_value.get_dict_str_str()["link"]
         scape_function = partial(_get_product_info, producer_url)
         result = driver_pool.execute(scape_function)
         return result, True
