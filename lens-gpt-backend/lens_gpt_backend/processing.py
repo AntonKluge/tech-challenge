@@ -8,7 +8,6 @@ from lens_gpt_backend.producer.price_producer import PriceProducer
 from lens_gpt_backend.producer.producer import Producer
 from lens_gpt_backend.producer.producer_website import ProducerWebsite
 from lens_gpt_backend.producer.second_hand_offer_producer import SecondHandOfferProducer
-from lens_gpt_backend.utils.product import Product
 
 
 def process_async(file_hash: str, init: Callable[[Producer], None]) -> None:
@@ -23,7 +22,6 @@ def process_async(file_hash: str, init: Callable[[Producer], None]) -> None:
 
 
 def _processing_hierarchy(file_hash: str) -> Producer:
-
     lens_links = LensLinksProducer(file_hash, add_queue=False)
     model_producer = ModelProducerProducer(file_hash)
     model_information_producer = ModelInformationProducer(file_hash)

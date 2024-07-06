@@ -1,16 +1,7 @@
-from functools import partial
-from urllib.parse import quote_plus
-
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-
 from lens_gpt_backend.producer.producer import Producer
 from lens_gpt_backend.utils.chat_gpt import ask_chat_gpt
-from lens_gpt_backend.utils.driver_pool import driver_pool
 from lens_gpt_backend.utils.google_search import google_search
 from lens_gpt_backend.utils.product import Product
-from lens_gpt_backend.utils.utils import distinct
 
 ASSISTANT_INSTR = ("You are an helpful assistant which helps me to find the website of the original producer "
                    "of a specific product. I have the urls of multiple websites which showed up when I searched "

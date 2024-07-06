@@ -7,7 +7,7 @@ from diskcache import Cache
 from flask import Flask, request, jsonify, Response, g
 from werkzeug.datastructures import FileStorage
 
-from lens_gpt_backend.processing import _processing_hierarchy, process_async
+from lens_gpt_backend.processing import process_async
 from lens_gpt_backend.utils.product import Product
 from lens_gpt_backend.utils.result_queue import ResultQueue
 
@@ -26,6 +26,7 @@ def before_request() -> None:
 @app.route('/')
 def index() -> Response:
     return app.send_static_file('index.html')
+
 
 @app.route('/classify', methods=['POST'])
 def upload_file() -> tuple[Response, int] | Response:

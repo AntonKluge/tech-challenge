@@ -31,11 +31,8 @@ class Product:
         if isinstance(data, dict):
             return_data = {}
             for k, v in data.items():
-                if isinstance(k, str) and (isinstance(v, str) or v is None):
-                    return_data[k] = v
-                else:
-                    raise ValueError(f"Expected str, got {type(k)}")
-            return return_data
+                return_data[k] = v
+            return return_data  # type: ignore
         raise ValueError(f"Expected dict, got {type(data)}")
 
     def __str__(self) -> str:

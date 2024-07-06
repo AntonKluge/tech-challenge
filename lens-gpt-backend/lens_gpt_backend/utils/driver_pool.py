@@ -3,19 +3,25 @@ import threading
 from dataclasses import dataclass
 from queue import Queue
 from typing import Callable, TypeVar
+from urllib.parse import quote_plus
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
-from lens_gpt_backend.utils.accept_cookies import _google_accept_cookies
+from lens_gpt_backend.utils.accept_cookies import _google_accept_cookies, _ebay_accept_cookies
 
 R = TypeVar('R')
 
 ACCEPT_COOKIE_FUNCTIONS = {
-    "https://google.com/": _google_accept_cookies
+    "https://google.com/": _google_accept_cookies,
+    "https://ebay.com/": _ebay_accept_cookies,
 }
+
+
+def format_url_parameter(parameter: str) -> str:
+    return quote_plus(parameter)
 
 
 @dataclass
