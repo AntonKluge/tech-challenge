@@ -23,8 +23,6 @@
             return;
         }
 
-        
-
         const file = fileInput.files[0];
         const formData = new FormData();
         formData.append('file', file);
@@ -57,9 +55,18 @@
                         timestamp.textContent = new Date().toISOString();
                         document.getElementById('results').appendChild(timestamp);
 
-                        // Append data
-                        const newElement = document.createElement('div');
-                        newElement.textContent = part.replace(/^data: /, '');
+                        // Format JSON data
+                        let formattedData;
+                        try {
+                            const jsonData = JSON.parse(part.replace(/^data: /, ''));
+                            formattedData = JSON.stringify(jsonData, null, 2);
+                        } catch (e) {
+                            formattedData = part.replace(/^data: /, '');
+                        }
+
+                        // Append formatted data
+                        const newElement = document.createElement('pre');
+                        newElement.textContent = formattedData;
                         document.getElementById('results').appendChild(newElement);
 
                         // Append divider

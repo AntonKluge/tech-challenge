@@ -1,9 +1,6 @@
-from openai import OpenAI
-
 from lens_gpt_backend.producer.producer import Producer
+from lens_gpt_backend.utils.chat_gpt import ask_chat_gpt
 from lens_gpt_backend.utils.product import Product
-
-client = OpenAI(api_key="sk-proj-s7WyfYnogKGcT6Ty30DDT3BlbkFJmn11EtBLGWsK5jAgWjEW")
 
 ASSISTANT_INSTR = ("You are an helpful assistant which helps me to identify clothing. I have the title of "
                    "multiple websites which sell that specific piece of clothing I am looking for. Please "
@@ -23,6 +20,8 @@ EXAMPLE_TITLES = ("Patagonia P-6 Logo Responsibili Long sleeve (black 2)\nPatago
                   "メルカリ\nPatagonia Men's P-6 Logo Long-Sleeve Responsibili-Tee | "
                   "Patagonia long sleeve, Tees, Patagonia")
 
+EXAMPLE_ANSWERS = "producer: Patagonia\nmodel: Men's Long-Sleeved P-6 Logo Responsibili-Tee"
+
 
 class ModelProducerProducer(Producer):
 
@@ -36,35 +35,8 @@ def _get_producer_model(items: list[dict[str, str | None]]) -> dict[str, str]:
     titles = [item['title'] for item in items if item['title']]
     input_text = "\n".join(titles)
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system",
-                "content": ASSISTANT_INSTR
-            },
-            {
-                "role": "user",
-                "content": EXAMPLE_TITLES
-            },
-            {
-                "role": "assistant",
-                "content": "producer: Patagonia\nmodel: Patagonia Men's Long-Sleeved P-6 Logo Responsibili-Tee"
-            },
-            {
-                "role": "user",
-                "content": input_text
-            }
-        ],
-        temperature=1,
-        max_tokens=256,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
+    response_text = ask_chat_gpt(ASSISTANT_INSTR, [EXAMPLE_TITLES, EXAMPLE_ANSWERS, input_text])
 
-    # Parse the response to extract the producer and model
-    response_text = response.choices[0].message.content
     if response_text:
         lines = response_text.strip().split("\n")
         producer = lines[0].split(": ")[1].strip('\"')

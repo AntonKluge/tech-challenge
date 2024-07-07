@@ -123,7 +123,7 @@ export function ClassificationCardRetailPrice({
 }) {
   const keyMap = {
     producer_url: 'Producer URL',
-    retail_price: 'Retail Price',
+    price: 'Retail Price',
     original_name: 'Original Name',
     description: 'Description',
     material: 'Material',

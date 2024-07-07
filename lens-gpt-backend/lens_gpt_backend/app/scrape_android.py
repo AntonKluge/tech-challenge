@@ -59,7 +59,6 @@ class TestAppium(unittest.TestCase):
         text_input.send_keys('armani')
         self.driver.press_keycode(66)
 
-
         # Assume self.driver is already set up
         all_elements = self.driver.find_elements(AppiumBy.XPATH, "//*")
         print(len(all_elements))

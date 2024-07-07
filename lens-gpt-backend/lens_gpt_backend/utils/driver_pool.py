@@ -3,19 +3,25 @@ import threading
 from dataclasses import dataclass
 from queue import Queue
 from typing import Callable, TypeVar
+from urllib.parse import quote_plus
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
-from lens_gpt_backend.utils.accept_cookies import _google_accept_cookies
+from lens_gpt_backend.utils.accept_cookies import _google_accept_cookies, _ebay_accept_cookies
 
 R = TypeVar('R')
 
 ACCEPT_COOKIE_FUNCTIONS = {
-    "https://google.com/": _google_accept_cookies
+    "https://google.com/": _google_accept_cookies,
+    "https://ebay.com/": _ebay_accept_cookies,
 }
+
+
+def format_url_parameter(parameter: str) -> str:
+    return quote_plus(parameter)
 
 
 @dataclass
@@ -39,6 +45,7 @@ def _init_new_driver() -> DriverWrapper:
         service = Service(executable_path="/usr/bin/chromedriver")
         driver = webdriver.Chrome(options=options, service=service)
     else:
+        # options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
 
     wait = WebDriverWait(driver, 10)  # Timeout after 10 seconds
@@ -52,10 +59,10 @@ class DriverPool:
         self.lock = threading.Lock()
         self.active_drivers = 0
 
-    def execute(self, function: Callable[[WebDriver, WebDriverWait[WebDriver]], R], base_url: str) -> R:
+    def execute(self, function: Callable[[WebDriver, WebDriverWait[WebDriver]], R], base_url: str | None = None) -> R:
         driver_wrapper = self._get_driver()
 
-        if base_url not in driver_wrapper.cookies:
+        if base_url and base_url not in driver_wrapper.cookies:
             ACCEPT_COOKIE_FUNCTIONS[base_url](driver_wrapper.driver)
             driver_wrapper.cookies[base_url] = True
 
