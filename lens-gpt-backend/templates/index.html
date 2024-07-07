@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+</head>
+<body>
+<h1>Upload a PNG File</h1>
+<form id="upload-form">
+    <input type="file" id="file-input" accept=".png" required>
+    <button type="submit">Upload</button>
+</form>
+<h2>Results:</h2>
+<div id="results"></div>
+
+<script>
+    document.getElementById('upload-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('file-input');
+        if (fileInput.files.length === 0) {
+            alert('Please select a file.');
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/classify', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'text/event-stream'
+            }
+        }).then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+
+            const processStream = ({done, value}) => {
+                if (done) {
+                    console.log('Stream complete');
+                    return;
+                }
+                buffer += decoder.decode(value, {stream: true});
+
+                let parts = buffer.split('\n\n');
+                buffer = parts.pop(); // Save the last part in the buffer in case it's incomplete
+
+                parts.forEach(part => {
+                    if (part.trim()) {
+                        // Append timestamp with milliseconds
+                        const timestamp = document.createElement('div');
+                        timestamp.textContent = new Date().toISOString();
+                        document.getElementById('results').appendChild(timestamp);
+
+                        // Format JSON data
+                        let formattedData;
+                        try {
+                            const jsonData = JSON.parse(part.replace(/^data: /, ''));
+                            formattedData = JSON.stringify(jsonData, null, 2);
+                        } catch (e) {
+                            formattedData = part.replace(/^data: /, '');
+                        }
+
+                        // Append formatted data
+                        const newElement = document.createElement('pre');
+                        newElement.textContent = formattedData;
+                        document.getElementById('results').appendChild(newElement);
+
+                        // Append divider
+                        const divider = document.createElement('hr');
+                        document.getElementById('results').appendChild(divider);
+                    }
+                });
+
+                return reader.read().then(processStream);
+            };
+
+            return reader.read().then(processStream);
+        }).catch(error => {
+            console.error('Fetch failed:', error);
+        });
+    });
+</script>
+</body>
+</html>
