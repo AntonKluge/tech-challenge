@@ -8,7 +8,6 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import {
   ClassificationCardContent,
-  ClassificationCardItemUrls,
   ClassificationCardModelProducer,
   ClassificationCardProducerUrl,
   ClassificationCardRetailPrice,
@@ -91,11 +90,9 @@ export default function ImageClassification() {
 
       {showClassifyCard && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-          {classificationResult
-            .filter((d) => d.data_description !== 'item-urls')
-            .map((result, index) => (
-              <ClassificationCard key={index} data={result} />
-            ))}
+          {classificationResult.map((result, index) => (
+            <ClassificationCard key={index} data={result} />
+          ))}
         </div>
       )}
     </>
@@ -105,8 +102,6 @@ export default function ImageClassification() {
 function ClassificationCard({ data }: { data: ClassificationProduct }) {
   const buildCard = useMemo(() => {
     switch (data.data_description) {
-      case 'item-urls':
-        return <ClassificationCardItemUrls data={data.data} />;
       case 'model-producer':
         return <ClassificationCardModelProducer data={data.data} />;
       case 'retail-price-details':
@@ -121,7 +116,6 @@ function ClassificationCard({ data }: { data: ClassificationProduct }) {
   }, [data]);
 
   const cardTitle: Record<ClassificationProductDescription, string> = {
-    'item-urls': 'Item URLs',
     'model-producer': 'Model Producer',
     'retail-price-details': 'Retail Price Details',
     'second-hand-offers': 'Second Hand Offers',

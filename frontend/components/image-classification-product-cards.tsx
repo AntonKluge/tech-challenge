@@ -51,32 +51,23 @@ export function ClassificationCardContent<
   );
 }
 
-export function ClassificationCardItemUrls({
-  data,
-}: {
-  data: ClassificationProduct<'item-urls'>['data'];
-}) {
-  return <ul>Item urls</ul>;
-}
-
 export function ClassificationCardProducerUrl({
   data,
 }: {
   data: ClassificationProduct<'producer-url'>['data'];
 }) {
   const keyMap = {
-    producer_url: 'Producer URL',
+    title: 'Title',
+    link: 'Link',
   };
 
   const valueMap = {
-    producer_url: linkMapper,
+    link: linkMapper,
   };
 
   return (
     <ClassificationCardContent
-      data={{
-        producer_url: data,
-      }}
+      data={data}
       keyMap={keyMap}
       valueMap={valueMap}
     />
