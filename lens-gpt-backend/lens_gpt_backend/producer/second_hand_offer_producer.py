@@ -45,7 +45,7 @@ def _extract_item(element: WebElement) -> dict[str, str | float]:
     price = element.find_element(By.CLASS_NAME, "s-item__price").text
     price_euro = _do_price_conversion_to_euro(price)
 
-    return {"link": link if link else "", "state": state, "price": price_euro}
+    return {"link": link if link else "", "wear": state, "price": price_euro}
 
 
 def _do_price_conversion_to_euro(price: str) -> float:

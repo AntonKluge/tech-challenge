@@ -136,7 +136,7 @@ def _get_product_info(search: str, driver: WebDriver, wait: WebDriverWait[WebDri
             format_key = key.lower().replace(" ", "_")
             product_info[format_key] = value
 
-    return Product(product_info, data_description="url")  # type: ignore
+    return Product(product_info, data_description="retail-price-details")  # type: ignore
 
 
 def _web_element_overlap(search_field: Polygon, element: WebElement) -> float:
