@@ -9,7 +9,7 @@ class PriceProducer(Producer):
     def _produce(self, input_value: Product) -> tuple[Product, bool]:
         items: list[dict[str, str | None]] = [price_dict.get_dict_str_str() for price_dict in input_value.get_list()]
 
-        used_prices = [float(item['price']) for item in items if item['state'] == 'Pre-Owned' and item['price'] is not None]
+        used_prices = [float(item['price']) for item in items if item['wear'] == 'Pre-Owned' and item['price'] is not None]
 
         if used_prices:
             used_mean_price, used_lower_bound, used_upper_bound, used_certainty = _calculate_price_bounds(used_prices)
@@ -17,9 +17,9 @@ class PriceProducer(Producer):
             return Product({}, data_description="price", data_type="price"), False
 
         result = {
-            'mean_price': used_mean_price,
-            'lower_bound': used_lower_bound,
-            'upper_bound': used_upper_bound,
+            'price': used_mean_price,
+            'min_range': used_lower_bound,
+            'max_range': used_upper_bound,
             'certainty': used_certainty
         }
         return Product(result, data_description="price", data_type="estimated-price"), True  # type: ignore
