@@ -15,4 +15,4 @@ class ModelInformationProducer(Producer):
             "color": "black",
             "specs": "100% polyester fleece with a sweater-knit face and a fleece interior",
         }
-        return Product(price, data_description="price", data_type="price"), True  # type: ignore
+        return Product(price, data_description="retail-price-details", data_type="price"), True  # type: ignore

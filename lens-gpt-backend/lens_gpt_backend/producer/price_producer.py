@@ -11,4 +11,4 @@ class PriceProducer(Producer):
             "min_range": 90.0,
             "max_range": 110.0,
         }
-        return Product(price, data_description="price", data_type="price"), True  # type: ignore
+        return Product(price, data_description="estimated-price", data_type="price"), True  # type: ignore
