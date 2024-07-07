@@ -41,7 +41,7 @@ def _init_new_driver() -> DriverWrapper:
 
     # Check if running in Docker by looking for the .dockerenv file
     if os.path.exists('/.dockerenv'):
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         service = Service(executable_path="/usr/bin/chromedriver")
         driver = webdriver.Chrome(options=options, service=service)
     else:
