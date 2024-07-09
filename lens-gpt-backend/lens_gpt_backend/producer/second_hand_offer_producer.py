@@ -31,7 +31,7 @@ def _get_second_hand_offers(search: dict[str, str], driver: WebDriver, wait: Web
     items = driver.find_elements(By.XPATH, "//li[starts-with(@id, 'item')]")
     items_parsed = [_extract_item(item) for item in items]
 
-    return Product(items_parsed, data_description="price"), True  # type: ignore
+    return Product(items_parsed, data_description="second-hand-offers"), True  # type: ignore
 
 
 def _extract_item(element: WebElement) -> dict[str, str | float]:
