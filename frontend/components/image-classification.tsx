@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import {
   ClassificationCardContent,
+  ClassificationCardEstimatedPrice,
   ClassificationCardModelProducer,
   ClassificationCardProducerUrl,
   ClassificationCardRetailPrice,
@@ -110,6 +111,8 @@ function ClassificationCard({ data }: { data: ClassificationProduct }) {
         return <ClassificationCardSecondHandOffers data={data.data} />;
       case 'producer-url':
         return <ClassificationCardProducerUrl data={data.data} />;
+      case 'estimated-price':
+        return <ClassificationCardEstimatedPrice data={data.data} />;
       default:
         return <ClassificationCardContent data={data.data} />;
     }

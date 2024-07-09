@@ -17,6 +17,26 @@ const linkMapper = (value: string) => (
   </a>
 );
 
+const euroFormatter = (value: number | string) => {
+  if (typeof value === 'string') {
+    const parsedValue = parseFloat(value).toFixed(2);
+
+    return `€${parsedValue}`;
+  }
+
+  return `€${value.toFixed(2)}`;
+};
+
+const percentageFormatter = (value: string | number) => {
+  if (typeof value === 'string') {
+    const parsedValue = (parseFloat(value) * 100).toFixed(1);
+
+    return `${parsedValue}%`;
+  }
+
+  return `${(value * 100).toFixed(1)}%`;
+};
+
 export function ClassificationCardContent<
   T extends ClassificationProductDescription
 >({
@@ -74,19 +94,48 @@ export function ClassificationCardProducerUrl({
   );
 }
 
+export function ClassificationCardEstimatedPrice({
+  data,
+}: {
+  data: ClassificationProduct<'estimated-price'>['data'];
+}) {
+  const keyMap = {
+    price: 'Price',
+    certainty: 'Certainty',
+    min_range: 'Min Range',
+    max_range: 'Max Range',
+  };
+
+  const valueMap = {
+    price: euroFormatter,
+    min_range: euroFormatter,
+    max_range: euroFormatter,
+    certainty: percentageFormatter,
+  };
+
+  return (
+    <ClassificationCardContent
+      data={data}
+      keyMap={keyMap}
+      valueMap={valueMap}
+    />
+  );
+}
+
 export function ClassificationCardSecondHandOffers({
   data,
 }: {
   data: ClassificationProduct<'second-hand-offers'>['data'];
 }) {
   const keyMap = {
-    url: 'URL',
+    link: 'Link',
     price: 'Price',
     wear: 'Wear',
   };
 
   const valueMap = {
-    url: linkMapper,
+    link: linkMapper,
+    price: euroFormatter,
   };
 
   return (
