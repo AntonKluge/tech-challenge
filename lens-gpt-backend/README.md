@@ -22,7 +22,6 @@ docker run \
   -p 5000:5000  \
   lens-gpt-backend \
   /bin/bash -c "Xvfb :99 -screen 0 1280x1024x24 & poetry run python -m lens_gpt_backend.main"
-
 ```
 
 
