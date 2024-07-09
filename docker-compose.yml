@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3002:5000
+    command: /bin/bash -c "Xvfb :99 -screen 0 1280x1024x24 & poetry run python -m lens_gpt_backend.main"
+    environment:
+      - DISPLAY=:99
     restart: always
 
   frontend:
