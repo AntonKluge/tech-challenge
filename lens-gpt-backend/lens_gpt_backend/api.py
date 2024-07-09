@@ -5,13 +5,16 @@ from typing import Generator
 
 from diskcache import Cache
 from flask import Flask, request, jsonify, Response, g
+from flask_cors import CORS
 from werkzeug.datastructures import FileStorage
 
 from lens_gpt_backend.processing import process_async
 from lens_gpt_backend.utils.product import Product
 from lens_gpt_backend.utils.result_queue import ResultQueue
 
-app = Flask(__name__, static_folder=os.path.abspath('../templates'))
+
+app = Flask(__name__, static_folder=os.path.abspath('./templates'))
+CORS(app)
 cache = Cache(".cache")
 if not os.path.exists("tmp"):
     os.makedirs("tmp")
