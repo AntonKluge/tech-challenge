@@ -128,7 +128,7 @@ function ClassificationCard({ data }: { data: ClassificationProduct }) {
   };
 
   return (
-    <div className="bg-white rounded-lg border-gray-200 border-[1px] overflow-hidden p-4">
+    <div className="bg-white rounded-lg border-gray-200 border-[1px] p-4 max-h-32 overflow-auto">
       <h2 className="text-lg font-bold">{cardTitle[data.data_description]}</h2>
       {buildCard}
     </div>
