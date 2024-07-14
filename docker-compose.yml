@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3001:3000
+    environment:
+      - NEXT_PUBLIC_API_URL=http://lens-api:5000
     restart: always
     depends_on:
       - lens-api
