@@ -39,10 +39,6 @@ poetry install
 poetry run python -m lens_gpt_backend.main
 ```
 
-#### Frontend
-
-#### Backend
-
 ## Technical Background
 
 ### Frontend
