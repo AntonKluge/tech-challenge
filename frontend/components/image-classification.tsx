@@ -40,7 +40,7 @@ export default function ImageClassification() {
       const formData = new FormData();
       formData.append('file', image);
 
-      fetch(`${Config.apiUrl}/classify`, {
+      fetch('http://localhost:3002/classify', {
         method: 'POST',
         body: formData,
       }).then(async (response) => {
