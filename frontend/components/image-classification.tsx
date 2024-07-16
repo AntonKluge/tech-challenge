@@ -1,6 +1,5 @@
 'use client';
 
-import Config from '@/lib/config';
 import {
   ClassificationProduct,
   ClassificationProductDescription,
@@ -43,46 +42,47 @@ export default function ImageClassification() {
       fetch('http://localhost:3002/classify', {
         method: 'POST',
         body: formData,
-      }).then(async (response) => {
-        const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error('Failed to get reader from response body');
-        }
-
-        resolve();
-        setShowClassifyCard(true);
-
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
-
-        const processStream = async ({
-          done,
-          value,
-        }: ReadableStreamReadResult<Uint8Array>): Promise<void> => {
-          if (done) {
-            return;
+      })
+        .then(async (response) => {
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error('Failed to get reader from response body');
           }
 
-          buffer += decoder.decode(value, { stream: true });
+          setShowClassifyCard(true);
 
-          const parts = buffer.split('\n\n');
-          buffer = parts.pop() || '';
+          const decoder = new TextDecoder('utf-8');
+          let buffer = '';
 
-          parts.forEach((part) => {
-            if (part.trim()) {
-              const data = part.replace(/^data: /, '');
-
-              const parsedData: ClassificationProduct = JSON.parse(data);
-
-              appendClassificationResult(parsedData);
+          const processStream = async ({
+            done,
+            value,
+          }: ReadableStreamReadResult<Uint8Array>): Promise<void> => {
+            if (done) {
+              return;
             }
-          });
+
+            buffer += decoder.decode(value, { stream: true });
+
+            const parts = buffer.split('\n\n');
+            buffer = parts.pop() || '';
+
+            parts.forEach((part) => {
+              if (part.trim()) {
+                const data = part.replace(/^data: /, '');
+
+                const parsedData: ClassificationProduct = JSON.parse(data);
+
+                appendClassificationResult(parsedData);
+              }
+            });
+
+            return reader.read().then(processStream);
+          };
 
           return reader.read().then(processStream);
-        };
-
-        return reader.read().then(processStream);
-      });
+        })
+        .then(resolve);
     });
   };
 

@@ -43,7 +43,7 @@ export default function ImageDropzone({ onImageUpload }: Props) {
   }, [image]);
 
   const resetImage = () => {
-    setImage(null);
+    location.reload();
   };
 
   return (
