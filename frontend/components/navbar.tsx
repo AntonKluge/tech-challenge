@@ -1,4 +1,5 @@
-import { Recycle } from 'lucide-react';
+import branding from '@/branding/branding.json';
+import Image from 'next/image';
 import Link from 'next/link';
 import NavbarLinks from './navbar-links';
 
@@ -11,8 +12,7 @@ export default function Navbar() {
             href="/"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
-            <Recycle className="h-6 w-6" />
-            <span className="sr-only">Acme Inc</span>
+            <Image src={branding.logo_url} alt="Logo" width={44} height={44} />
           </Link>
           <NavbarLinks />
         </div>
