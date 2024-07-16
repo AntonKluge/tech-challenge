@@ -19,3 +19,15 @@ The stream is used to update the UI with the classification results as they are 
 Each classification result contains a `data_description` which is used to determine the type of data being received.
 Examples of data types include `model-producer`, `producer-url` or `estimated-price`.
 For each data type, a different UI component is rendered to display the data.
+
+## Branding
+The application can be easily rebranded by configuring the `branding/branding.json` file.
+The file contains the following fields:
+
+- `name`: The name of the application or the company.
+- `logo_url`: The URL of the logo image.
+- `logo_alt`: The alt text for the logo image.
+- `callout_title`: The title displayed on the main page.
+- `callout_description`: The description displayed on the main page.
+
+After configuring the branding file, the application will automatically update with the new branding.
