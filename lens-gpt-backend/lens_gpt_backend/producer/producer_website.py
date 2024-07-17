@@ -33,7 +33,7 @@ class ProducerWebsite(Producer):
         for i in range(3):
             response = ask_chat_gpt(ASSISTANT_INSTR, [EXAMPLE_TITLES, EXAMPLE_ANSWERS, prompt])
             if response.isnumeric() and 1 <= int(response) <= 7:
-                return Product(search_results[int(response) - 1], data_description="producer-url"), True  # type: ignore
+                return Product(search_results[int(response) - 1], data_description="producer-url", data_type="dict[str,str]"), True  # type: ignore
             print("Invalid response, please try again: " + response + "\n" + prompt)
 
         raise ValueError("No response from AI model!")

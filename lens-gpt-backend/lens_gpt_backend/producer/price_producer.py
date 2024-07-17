@@ -22,7 +22,7 @@ class PriceProducer(Producer):
             'max_range': used_upper_bound,
             'certainty': used_certainty
         }
-        return Product(result, data_description="estimated-price", data_type="estimated-price"), True  # type: ignore
+        return Product(result, data_description="estimated-price", data_type="dict[str,str]"), True  # type: ignore
 
 
 def _calculate_price_bounds(prices_raw: list[float]) -> tuple[float, float, float, float]:
