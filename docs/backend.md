@@ -50,3 +50,10 @@ poetry run python -m lens_gpt_backend.main
 
 This command starts the server, allowing you to begin development.
 
+## Endpoints
+
+Upon requesting the classification at the ``/classify`` endpoint, the server will stream the response back as 
+soon as partial results become available. As this is a POST request, the caller should not buffer the response, 
+as it will wait until all classifications are done. The different response are marked by a ``data_type`` and 
+``data_description`` field which help to identify the data on the client side. As of now the server streams the
+following responses:

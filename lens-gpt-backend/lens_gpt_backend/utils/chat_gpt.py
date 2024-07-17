@@ -1,6 +1,8 @@
 from openai import OpenAI
 
-client = OpenAI(api_key="sk-proj-s7WyfYnogKGcT6Ty30DDT3BlbkFJmn11EtBLGWsK5jAgWjEW")
+from lens_gpt_backend.config import CONFIG
+
+client = OpenAI(api_key=CONFIG['OPENAI_API_KEY'])
 
 
 def ask_chat_gpt(instruction: str, input_text: list[str]) -> str:

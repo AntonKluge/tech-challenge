@@ -9,6 +9,8 @@ from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.interaction import POINTER_TOUCH
 from selenium.webdriver.common.actions.pointer_input import PointerInput
 
+# THIS MODULE IS BEING CREATED AND NOT YET FINISHED
+
 capabilities = {
     'platformName': 'Android',
     'automationName': 'uiautomator2',
@@ -23,6 +25,7 @@ APPIUM_SERVER_URL = 'http://hub.home:4723'
 
 
 class TestAppium(unittest.TestCase):
+
     def setUp(self) -> None:
         self.driver = webdriver.Remote(APPIUM_SERVER_URL,  # type: ignore
                                        options=AppiumOptions().load_capabilities(capabilities))
@@ -48,7 +51,7 @@ class TestAppium(unittest.TestCase):
 
         # scroll up
         print('Scrolling up')
-        scroll_menu(self, 'down', 600)
+        _scroll_menu(self, 'down', 600)
 
         add_text = self.driver.find_element(AppiumBy.XPATH,
                                             '//android.widget.Button[@content-desc="Add a text query to your search."]')
@@ -68,7 +71,7 @@ class TestAppium(unittest.TestCase):
         print(self.driver.page_source)
 
 
-def scroll_menu(self, direction: str = 'up', distance: int = 400) -> None:
+def _scroll_menu(self, direction: str = 'up', distance: int = 400) -> None:
     action = ActionChains(self.driver)
     window_size = self.driver.get_window_size()
     x, y = window_size['width'] / 2, window_size['height'] * 0.8
