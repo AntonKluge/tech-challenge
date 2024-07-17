@@ -1,13 +1,14 @@
-# Backend
+## Backend
 
 The backend, which is responsible for the identification based of a picture and streaming that information to the
 frontend is build in Python 3.12 using poetry as its dependency manager. The backend is a flask application that
 utilizes the Google Lens features by utilizing Selenium to access the Google Lens website and GPT-4o to generate
 a description of the picture. The backend is containerized using Docker and can be run using the following command:
 
-## Usage
+### Usage
 
-The usage of the backend in production requires Docker to be installed.
+The usage of the backend in production requires Docker to be installed on the system. The backend can be run
+using the following command, replacing `sk-your-key-here` with the OpenAI API key:
 
 ```bash
 cd lens-gpt-backend
@@ -15,6 +16,7 @@ docker build -t lens-gpt-backend .
 docker run \
     --rm \                      
   -e DISPLAY=:99 \
+  -e OPENAI_API_KEY=sk-your-key-here \ 
   -p 3002:5000  \
   lens-gpt-backend \
   /bin/bash -c "Xvfb :99 -screen 0 1280x1024x24 & poetry run python -m lens_gpt_backend.main"
