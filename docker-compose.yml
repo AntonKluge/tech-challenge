@@ -9,6 +9,7 @@ services:
     command: /bin/bash -c "Xvfb :99 -screen 0 1280x1024x24 & poetry run python -m lens_gpt_backend.main"
     environment:
       - DISPLAY=:99
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     restart: always
 
   frontend:
@@ -19,7 +20,8 @@ services:
     ports:
       - 3001:3000
     environment:
-      - NEXT_PUBLIC_API_URL=http://lens-api:5000
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3002}
+
     restart: always
     depends_on:
       - lens-api

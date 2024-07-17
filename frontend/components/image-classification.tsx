@@ -15,6 +15,7 @@ import {
   ClassificationCardSecondHandOffers,
 } from './image-classification-product-cards';
 import ImageDropzone from './image-dropzone';
+import Config from "@/lib/config";
 
 export default function ImageClassification() {
   const [showClassifyCard, setShowClassifyCard] = useState(false);
@@ -39,7 +40,10 @@ export default function ImageClassification() {
       const formData = new FormData();
       formData.append('file', image);
 
-      fetch('http://localhost:3002/classify', {
+      // cut of tailing / of url
+      const apiUrl = Config.apiUrl.replace(/\/$/, '');
+
+      fetch(apiUrl + '/classify', {
         method: 'POST',
         body: formData,
       })
